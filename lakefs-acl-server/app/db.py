@@ -1,4 +1,5 @@
 import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -8,7 +9,9 @@ DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./acl_server.db")
 connect_args = {}
 if DATABASE_URL.startswith("sqlite"):
     # Позволяет использовать shared in-memory базу:
-    if DATABASE_URL == "sqlite:///:memory:" or DATABASE_URL.startswith("sqlite:///:memory:?cache=shared"):
+    if DATABASE_URL == "sqlite:///:memory:" or DATABASE_URL.startswith(
+        "sqlite:///:memory:?cache=shared"
+    ):
         DATABASE_URL = "sqlite:///:memory:?cache=shared"
         connect_args = {"check_same_thread": False, "uri": True}
     else:

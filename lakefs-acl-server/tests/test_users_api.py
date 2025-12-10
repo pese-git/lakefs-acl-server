@@ -3,28 +3,28 @@ import os
 os.environ["DATABASE_URL"] = "sqlite:///:memory:?cache=shared"
 os.environ["ACL_API_TOKEN"] = "testtoken123"
 
-from app.db import SessionLocal, engine
-from app.models import Base
-
-Base.metadata.create_all(bind=engine)
-
 import pytest
 from fastapi.testclient import TestClient
 
+from app.db import SessionLocal, engine
 from app.main import app
+from app.models import Base
+
+
+@pytest.fixture(autouse=True)
+def setup_database():
+    # Перед каждым тестом создать все таблицы.
+    Base.metadata.create_all(bind=engine)
+    yield
+    # После теста удалить все таблицы (чистота окружения теста)
+    Base.metadata.drop_all(bind=engine)
+
 
 client = TestClient(app)
 AUTH_HEADER = {"Authorization": "Bearer testtoken123"}
 
 
-@pytest.fixture(autouse=True)
-def clear_users():
-    from app.models import User
-
-    db = SessionLocal()
-    db.query(User).delete()
-    db.commit()
-    db.close()
+# clear_users fixture удалена, так как setup_database теперь управляет созданием и удалением таблиц автоматически
 
 
 def test_create_user():
