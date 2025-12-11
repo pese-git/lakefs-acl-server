@@ -16,6 +16,16 @@ class CredentialRepository:
     def get_by_id(self, credential_id: int) -> Optional[Credential]:
         return self.db.query(Credential).filter(Credential.id == credential_id).first()
 
+    def create_for_user(self, user_id: int, access_key: str, secret_key: str) -> Credential:
+        cred = Credential(access_key=access_key, secret_key=secret_key, user_id=user_id)
+        self.db.add(cred)
+        self.db.commit()
+        self.db.refresh(cred)
+        return cred
+
+    def list_by_user_id(self, user_id: int) -> List[Credential]:
+        return self.db.query(Credential).filter(Credential.user_id == user_id).all()
+
     def create(self, credential_data: CredentialCreate) -> Credential:
         cred = Credential(
             access_key=credential_data.access_key,

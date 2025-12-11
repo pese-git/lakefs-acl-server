@@ -2,31 +2,45 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_db
-from app.schemas.credential import CredentialCreate, CredentialRead
+from app.schemas.credential import CredentialRead
 from app.services.credential_service import CredentialService
 
-router = APIRouter(prefix="/credentials", tags=["Credentials"])
+router = APIRouter(tags=["Credentials"])
 
 
-@router.post("/", response_model=CredentialRead, status_code=status.HTTP_201_CREATED)
-def create_credential(cred: CredentialCreate, db: Session = Depends(get_db)):
+# --- CRUD для credentials, вложенные в user ---
+@router.post(
+    "/auth/users/{user_id}/credentials",
+    response_model=CredentialRead,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_user_credential(user_id: int, db: Session = Depends(get_db)):
     service = CredentialService(db)
-    return service.create_credential(cred)
+    return service.create_credential_for_user(user_id)
 
 
-@router.get("/", response_model=list[CredentialRead])
-def list_credentials(db: Session = Depends(get_db)):
+@router.get("/auth/users/{user_id}/credentials", response_model=list[CredentialRead])
+def list_user_credentials(user_id: int, db: Session = Depends(get_db)):
     service = CredentialService(db)
-    return service.list_credentials()
+    return service.list_user_credentials(user_id)
 
 
-@router.get("/{credential_id}", response_model=CredentialRead)
-def get_credential(credential_id: int, db: Session = Depends(get_db)):
+@router.get("/auth/users/{user_id}/credentials/{credential_id}", response_model=CredentialRead)
+def get_user_credential(user_id: int, credential_id: int, db: Session = Depends(get_db)):
     service = CredentialService(db)
-    return service.get_credential(credential_id)
+    return service.get_user_credential(user_id, credential_id)
 
 
-@router.delete("/{credential_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_credential(credential_id: int, db: Session = Depends(get_db)):
+@router.delete(
+    "/auth/users/{user_id}/credentials/{credential_id}", status_code=status.HTTP_204_NO_CONTENT
+)
+def delete_user_credential(user_id: int, credential_id: int, db: Session = Depends(get_db)):
     service = CredentialService(db)
-    return service.delete_credential(credential_id)
+    return service.delete_user_credential(user_id, credential_id)
+
+
+# --- Для интеграции с lakeFS ---
+@router.get("/auth/credentials/{access_key}", response_model=CredentialRead)
+def get_credential_by_access_key(access_key: str, db: Session = Depends(get_db)):
+    service = CredentialService(db)
+    return service.get_credential_by_access_key(access_key)
