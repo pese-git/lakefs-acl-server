@@ -10,13 +10,13 @@ router = APIRouter(tags=["Credentials"])
 
 # --- CRUD для credentials, вложенные в user ---
 @router.post(
-    "/auth/users/{user_id}/credentials",
+    "/auth/users/{user_name}/credentials",
     response_model=CredentialRead,
     status_code=status.HTTP_201_CREATED,
 )
-def create_user_credential(user_id: int, db: Session = Depends(get_db)):
+def create_user_credential(user_name: str, db: Session = Depends(get_db)):
     service = CredentialService(db)
-    return service.create_credential_for_user(user_id)
+    return service.create_credential_for_user(user_name)
 
 
 @router.get("/auth/users/{user_id}/credentials", response_model=list[CredentialRead])

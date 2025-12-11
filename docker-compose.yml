@@ -6,7 +6,38 @@ services:
       context: ./lakefs-acl
     environment:
       - ACL_API_TOKEN=${ACL_API_TOKEN}
+      - DATABASE_URL=sqlite:///./storage/acl_server.db
     ports:
       - "8000:8000"
     volumes:
-      - ./lakefs-acl/acl_server.db:/app/acl_server.db
+      - ./lakefs-acl-data:/app/storage
+    networks:
+      - lakefsnet
+
+  lakefs:
+    image: treeverse/lakefs:1.73.0
+    container_name: lakefs
+    depends_on:
+      - lakefs-acl-server
+    environment:
+      LAKEFS_LOGGING_LEVEL: DEBUG
+      LAKEFS_DATABASE_TYPE: local
+      LAKEFS_BLOCKSTORE_TYPE: local
+      LAKEFS_BLOCKSTORE_LOCAL_PATH: /data
+      LAKEFS_AUTH_API_ENDPOINT: "http://lakefs-acl-server:8000"
+      LAKEFS_AUTH_API_TOKEN: ${ACL_API_TOKEN}
+      LAKEFS_AUTH_UI_CONFIG_RBAC: "simplified"
+      LAKEFS_AUTH_ENCRYPT_SECRET_KEY: ${LAKEFS_AUTH_ENCRYPT_SECRET_KEY}
+    volumes:
+      - ./lakefs-data:/data
+    ports:
+      - "8001:8000"
+    networks:
+      - lakefsnet
+
+networks:
+  lakefsnet:
+    driver: bridge
+
+#volumes:
+#  lakefs-data:

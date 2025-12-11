@@ -5,7 +5,7 @@ from app.core.dependencies import get_db
 from app.schemas.policy import PolicyCreate, PolicyRead
 from app.services.policy_service import PolicyService
 
-router = APIRouter(prefix="/policies", tags=["Policies"])
+router = APIRouter(prefix="/auth/policies", tags=["Policies"])
 
 
 @router.post("/", response_model=PolicyRead, status_code=status.HTTP_201_CREATED)
@@ -52,12 +52,12 @@ def remove_policy_from_user(policy_id: int, user_id: int, db: Session = Depends(
 
 
 @router.put("/{policy_id}/groups/{group_id}", response_model=PolicyRead)
-def assign_policy_to_group(policy_id: int, group_id: int, db: Session = Depends(get_db)):
+def assign_policy_to_group(policy_id: int, group_id: str, db: Session = Depends(get_db)):
     service = PolicyService(db)
     return service.assign_policy_to_group(policy_id, group_id)
 
 
 @router.delete("/{policy_id}/groups/{group_id}", response_model=PolicyRead)
-def remove_policy_from_group(policy_id: int, group_id: int, db: Session = Depends(get_db)):
+def remove_policy_from_group(policy_id: int, group_id: str, db: Session = Depends(get_db)):
     service = PolicyService(db)
     return service.remove_policy_from_group(policy_id, group_id)

@@ -5,7 +5,7 @@ from app.core.dependencies import get_db
 from app.schemas.group import GroupCreate, GroupRead
 from app.services.group_service import GroupService
 
-router = APIRouter(prefix="/groups", tags=["Groups"])
+router = APIRouter(prefix="/auth/groups", tags=["Groups"])
 
 
 @router.post("/", response_model=GroupRead, status_code=status.HTTP_201_CREATED)
@@ -21,13 +21,14 @@ def list_groups(db: Session = Depends(get_db)):
 
 
 @router.get("/{group_id}", response_model=GroupRead)
-def get_group(group_id: int, db: Session = Depends(get_db)):
+def get_group(group_id: str, db: Session = Depends(get_db)):
     service = GroupService(db)
-    return service.get_group(group_id)
+
+    return service.get_group_by_name(group_id)
 
 
 @router.delete("/{group_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_group(group_id: int, db: Session = Depends(get_db)):
+def delete_group(group_id: str, db: Session = Depends(get_db)):
     service = GroupService(db)
     return service.delete_group(group_id)
 
@@ -36,19 +37,21 @@ def delete_group(group_id: int, db: Session = Depends(get_db)):
 from app.schemas.user import UserRead
 
 
-@router.put("/{group_id}/members/{user_id}", response_model=GroupRead)
-def add_user_to_group(group_id: int, user_id: int, db: Session = Depends(get_db)):
+@router.put(
+    "/{group_id}/members/{user_id}", response_model=GroupRead, status_code=status.HTTP_201_CREATED
+)
+def add_user_to_group(group_id: str, user_id: str, db: Session = Depends(get_db)):
     service = GroupService(db)
     return service.add_user_to_group(group_id, user_id)
 
 
 @router.delete("/{group_id}/members/{user_id}", response_model=GroupRead)
-def remove_user_from_group(group_id: int, user_id: int, db: Session = Depends(get_db)):
+def remove_user_from_group(group_id: str, user_id: str, db: Session = Depends(get_db)):
     service = GroupService(db)
     return service.remove_user_from_group(group_id, user_id)
 
 
 @router.get("/{group_id}/members", response_model=list[UserRead])
-def get_group_members(group_id: int, db: Session = Depends(get_db)):
+def get_group_members(group_id: str, db: Session = Depends(get_db)):
     service = GroupService(db)
     return service.get_group_members(group_id)

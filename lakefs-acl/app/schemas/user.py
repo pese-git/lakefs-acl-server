@@ -34,3 +34,8 @@ class UserRead(UserBase):
                 "is_active": True
             }
         }
+
+class UserListResponse(BaseModel):
+    results: list[UserRead]
+    # Если lakeFS потребуется amount:
+    # amount: int

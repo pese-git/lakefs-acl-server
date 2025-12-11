@@ -61,7 +61,7 @@ class PolicyService:
             raise HTTPException(status_code=404, detail="User not found")
         return self.repo.remove_policy_from_user(policy, user)
 
-    def assign_policy_to_group(self, policy_id: int, group_id: int):
+    def assign_policy_to_group(self, policy_id: int, group_id: str):
         from app.repositories.group_repository import GroupRepository
 
         group_repo = GroupRepository(self.db)
@@ -73,7 +73,7 @@ class PolicyService:
             raise HTTPException(status_code=404, detail="Group not found")
         return self.repo.assign_policy_to_group(policy, group)
 
-    def remove_policy_from_group(self, policy_id: int, group_id: int):
+    def remove_policy_from_group(self, policy_id: int, group_id: str):
         from app.repositories.group_repository import GroupRepository
 
         group_repo = GroupRepository(self.db)

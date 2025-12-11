@@ -1,8 +1,10 @@
 import secrets
+from typing import Optional
 
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from app.models.user import User
 from app.repositories.credential_repository import CredentialRepository
 
 
@@ -12,17 +14,22 @@ class CredentialService:
         self.repo = CredentialRepository(db)
 
     # --- Новый функционал для пользователя ---
-    def create_credential_for_user(self, user_id: int):
+    def create_credential_for_user(self, user_name: str):
+        print(f"### create_credential_for_user -> user_name: {user_name}")
         from app.repositories.user_repository import UserRepository
 
         user_repo = UserRepository(self.db)
-        user = user_repo.get_by_id(user_id)
+        user: Optional[User] = user_repo.get_by_username(user_name)
         if not user:
+            print("### create_credential_for_user -> not user")
             raise HTTPException(status_code=404, detail="User not found")
+        print(f"### USER: {user}")
         access_key = secrets.token_urlsafe(16)
         secret_key = secrets.token_urlsafe(32)
         # Можно сделать проверку уникальности access_key на более сложной БД
-        cred = self.repo.create_for_user(user_id, access_key, secret_key)
+        cred = self.repo.create_for_user(
+            user_id=user.id, access_key=access_key, secret_key=secret_key
+        )
         return cred
 
     def list_user_credentials(self, user_id: int):

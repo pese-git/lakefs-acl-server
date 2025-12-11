@@ -14,10 +14,12 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     return service.create_user(user)
 
 
-@router.get("/", response_model=list[UserRead])
+from app.schemas.user import UserListResponse
+
+@router.get("/", response_model=UserListResponse)
 def list_users(db: Session = Depends(get_db)):
     service = UserService(db)
-    return service.list_users()
+    return {"results": service.list_users()}
 
 
 @router.get("/{user_id}", response_model=UserRead)
@@ -27,6 +29,10 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
 
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_user(user_id: int, db: Session = Depends(get_db)):
+def delete_user(user_id: str, db: Session = Depends(get_db)):
     service = UserService(db)
-    return service.delete_user(user_id)
+    # поддержка удаления по id (число) или username (str)
+    if user_id.isdigit():
+        return service.delete_user(int(user_id))
+    else:
+        return service.delete_user_by_username(user_id)
