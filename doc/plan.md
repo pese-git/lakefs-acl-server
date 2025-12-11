@@ -74,18 +74,17 @@ SQLite содержит все таблицы, можно создавать з�
 
 ---
 
-## Итерация 1.5 — CRUD Groups API (2–3 дня)
+## Итерация 1.5 — CRUD Groups API (2–3 дня) — ✅ выполнено
 
-* Endpoint’ы: `POST /auth/groups`, `GET /auth/groups`, `GET /auth/groups/{group_id}`, `DELETE /auth/groups/{group_id}`
+* Endpoint’ы: `POST /auth/groups`, `GET /auth/groups`, `GET /auth/groups/{group_id}`, `DELETE /auth/groups/{group_id}` — ✅
 * Привязка пользователей к группам:
-
-  * `PUT /auth/groups/{group_id}/members/{user_id}`
-  * `DELETE /auth/groups/{group_id}/members/{user_id}`
-  * `GET /auth/groups/{group_id}/members`
-* Все endpoint’ы защищены токеном.
+  * `PUT /auth/groups/{group_id}/members/{user_id}` — ✅
+  * `DELETE /auth/groups/{group_id}/members/{user_id}` — ✅
+  * `GET /auth/groups/{group_id}/members` — ✅
+* Все endpoint’ы защищены токеном. — ✅
 
 **Выходной продукт:**
-Рабочий CRUD групп + управление членством, защищенный токеном.
+Рабочий CRUD групп + управление членством, защищенный токеном. — ✅
 
 ---
 
