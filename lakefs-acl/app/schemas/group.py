@@ -6,11 +6,21 @@ class GroupBase(BaseModel):
 
 
 class GroupCreate(GroupBase):
-    pass
-
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "name": "admins"
+            }
+        }
 
 class GroupRead(GroupBase):
     id: int
 
     class Config:
         from_attributes = True
+        json_schema_extra = {
+            "example": {
+                "id": 1,
+                "name": "admins"
+            }
+        }

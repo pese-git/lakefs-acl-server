@@ -12,7 +12,13 @@ class PolicyBase(BaseModel):
 
 
 class PolicyCreate(PolicyBase):
-    pass
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "name": "readonly",
+                "document": '{"effect": "allow", "actions": ["read"]}'
+            }
+        }
 
 
 class PolicyRead(PolicyBase):
@@ -22,3 +28,16 @@ class PolicyRead(PolicyBase):
 
     class Config:
         from_attributes = True
+        json_schema_extra = {
+            "example": {
+                "id": 1,
+                "name": "readonly",
+                "document": '{"effect": "allow", "actions": ["read"]}',
+                "users": [
+                    {"id": 1, "username": "john_doe", "email": "john@example.com", "is_active": True}
+                ],
+                "groups": [
+                    {"id": 1, "name": "admins"}
+                ]
+            }
+        }

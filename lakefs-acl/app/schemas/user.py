@@ -12,11 +12,25 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    pass
-
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "username": "john_doe",
+                "email": "john@example.com",
+                "is_active": True
+            }
+        }
 
 class UserRead(UserBase):
     id: int
 
     class Config:
         from_attributes = True
+        json_schema_extra = {
+            "example": {
+                "id": 1,
+                "username": "john_doe",
+                "email": "john@example.com",
+                "is_active": True
+            }
+        }
