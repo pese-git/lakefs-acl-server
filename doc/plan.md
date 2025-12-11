@@ -99,20 +99,19 @@ SQLite содержит все таблицы, можно создавать з�
 
 ---
 
-## Итерация 1.7 — CRUD Credentials API (2–3 дня)
+## Итерация 1.7 — CRUD Credentials API (2–3 дня) — ✅ выполнено
 
 * Endpoint’ы:
-
-  * `POST /auth/users/{user_id}/credentials`
-  * `GET /auth/users/{user_id}/credentials`
-  * `GET /auth/users/{user_id}/credentials/{access_key_id}`
-  * `DELETE /auth/users/{user_id}/credentials/{access_key_id}`
-  * `GET /auth/credentials/{access_key_id}` для lakeFS
-* Генерация access_key/secret_key.
-* Все endpoint’ы защищены токеном.
+  * `POST /auth/users/{user_id}/credentials` — ✅
+  * `GET /auth/users/{user_id}/credentials` — ✅
+  * `GET /auth/users/{user_id}/credentials/{access_key_id}` — ✅
+  * `DELETE /auth/users/{user_id}/credentials/{access_key_id}` — ✅
+  * `GET /auth/credentials/{access_key_id}` для lakeFS — ✅
+* Генерация access_key/secret_key. — ✅
+* Все endpoint’ы защищены токеном. — ✅
 
 **Выходной продукт:**
-Рабочий credentials API, lakeFS может использовать credentials, все запросы проверяют токен.
+Рабочий credentials API с автогенерацией ключей, интеграцией с lakeFS и тестовым покрытием. — ✅
 
 ---
 
