@@ -30,3 +30,22 @@ def get_group(group_id: int, db: Session = Depends(get_db)):
 def delete_group(group_id: int, db: Session = Depends(get_db)):
     service = GroupService(db)
     return service.delete_group(group_id)
+
+
+# --- Новый функционал: управление членством ---
+from app.schemas.user import UserRead
+
+@router.put("/{group_id}/members/{user_id}", response_model=GroupRead)
+def add_user_to_group(group_id: int, user_id: int, db: Session = Depends(get_db)):
+    service = GroupService(db)
+    return service.add_user_to_group(group_id, user_id)
+
+@router.delete("/{group_id}/members/{user_id}", response_model=GroupRead)
+def remove_user_from_group(group_id: int, user_id: int, db: Session = Depends(get_db)):
+    service = GroupService(db)
+    return service.remove_user_from_group(group_id, user_id)
+
+@router.get("/{group_id}/members", response_model=list[UserRead])
+def get_group_members(group_id: int, db: Session = Depends(get_db)):
+    service = GroupService(db)
+    return service.get_group_members(group_id)

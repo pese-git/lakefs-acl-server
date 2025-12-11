@@ -29,3 +29,21 @@ class GroupRepository:
     def delete(self, group: Group):
         self.db.delete(group)
         self.db.commit()
+
+    # --- Новый функционал для членства группы ---
+    def add_user_to_group(self, group: Group, user) -> Group:
+        if user not in group.users:
+            group.users.append(user)
+            self.db.commit()
+            self.db.refresh(group)
+        return group
+
+    def remove_user_from_group(self, group: Group, user) -> Group:
+        if user in group.users:
+            group.users.remove(user)
+            self.db.commit()
+            self.db.refresh(group)
+        return group
+
+    def get_group_members(self, group: Group):
+        return group.users
