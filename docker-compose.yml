@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  lakefs-acl-server:
+    build:
+      context: ./lakefs-acl
+    environment:
+      - ACL_API_TOKEN=${ACL_API_TOKEN}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./lakefs-acl/acl_server.db:/app/acl_server.db
