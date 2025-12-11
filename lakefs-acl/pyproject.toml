@@ -13,6 +13,7 @@ dependencies = [
     "pydantic==2.5.1",
     "sqlalchemy==2.0.44",
     "httpx==0.25.1",
+    "email-validator>=2.3.0",
 ]
 
 [build-system]

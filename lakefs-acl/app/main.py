@@ -8,14 +8,14 @@ from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 
-from app.api.users import router as users_router
-from app.auth import TokenAuthMiddleware
+from app.api.routes import register_routes
+from app.auth.auth import TokenAuthMiddleware
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # --- Create tables in DB on startup (no Alembic needed yet) ---
-    from app.db import engine
+    from app.db.session import engine
     from app.models import Base
 
     Base.metadata.create_all(bind=engine)
@@ -37,11 +37,7 @@ def custom_openapi():
     )
     # Добавляем bearer-схему для авторизации
     openapi_schema["components"]["securitySchemes"] = {
-        "BearerAuth": {
-            "type": "http",
-            "scheme": "bearer",
-            "bearerFormat": "JWT"
-        }
+        "BearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}
     }
     openapi_schema["security"] = [{"BearerAuth": []}]
     app.openapi_schema = openapi_schema
@@ -53,7 +49,8 @@ app.openapi = custom_openapi  # Переопределить openapi-генер�
 app.add_middleware(
     TokenAuthMiddleware, allowed_paths=["/health", "/docs", "/openapi.json", "/redoc"]
 )  # type: ignore
-app.include_router(users_router)
+
+register_routes(app)
 
 
 @app.get("/health", tags=["Health"])
