@@ -1,16 +1,18 @@
 from fastapi.testclient import TestClient
+
 from app.main import app
 
 client = TestClient(app)
 headers = {"Authorization": "Bearer my-secret-key"}
 
+
 def test_create_and_get_user():
     # Создание пользователя
-    response = client.post("/auth/users/", json={
-        "username": "testuser",
-        "email": "test@example.com",
-        "is_active": True
-    }, headers=headers)
+    response = client.post(
+        "/auth/users/",
+        json={"username": "testuser", "email": "test@example.com", "is_active": True},
+        headers=headers,
+    )
     assert response.status_code == 201
     user = response.json()
     assert user["username"] == "testuser"

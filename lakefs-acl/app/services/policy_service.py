@@ -39,6 +39,7 @@ class PolicyService:
 
     def assign_policy_to_user(self, policy_id: int, user_id: int):
         from app.repositories.user_repository import UserRepository
+
         user_repo = UserRepository(self.db)
         policy = self.repo.get_by_id(policy_id)
         if not policy:
@@ -50,6 +51,7 @@ class PolicyService:
 
     def remove_policy_from_user(self, policy_id: int, user_id: int):
         from app.repositories.user_repository import UserRepository
+
         user_repo = UserRepository(self.db)
         policy = self.repo.get_by_id(policy_id)
         if not policy:
@@ -61,6 +63,7 @@ class PolicyService:
 
     def assign_policy_to_group(self, policy_id: int, group_id: int):
         from app.repositories.group_repository import GroupRepository
+
         group_repo = GroupRepository(self.db)
         policy = self.repo.get_by_id(policy_id)
         if not policy:
@@ -72,6 +75,7 @@ class PolicyService:
 
     def remove_policy_from_group(self, policy_id: int, group_id: int):
         from app.repositories.group_repository import GroupRepository
+
         group_repo = GroupRepository(self.db)
         policy = self.repo.get_by_id(policy_id)
         if not policy:

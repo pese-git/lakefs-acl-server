@@ -1,12 +1,16 @@
 from fastapi.testclient import TestClient
+
 from app.main import app
 
 client = TestClient(app)
 headers = {"Authorization": "Bearer my-secret-key"}
 
+
 def test_policies_crud_and_membership():
     # Создать политику
-    response = client.post("/policies/", json={"name": "readonly", "document": '{"effect": "allow"}'}, headers=headers)
+    response = client.post(
+        "/policies/", json={"name": "readonly", "document": '{"effect": "allow"}'}, headers=headers
+    )
     assert response.status_code == 201
     policy = response.json()
     assert policy["name"] == "readonly"
@@ -24,17 +28,21 @@ def test_policies_crud_and_membership():
     assert any(pl["name"] == "readonly" for pl in all_resp.json())
 
     # Обновление политики
-    upd_resp = client.put(f"/policies/{policy_id}", json={"name": "readonly2", "document": '{"effect": "deny"}'}, headers=headers)
+    upd_resp = client.put(
+        f"/policies/{policy_id}",
+        json={"name": "readonly2", "document": '{"effect": "deny"}'},
+        headers=headers,
+    )
     assert upd_resp.status_code == 200
     assert upd_resp.json()["name"] == "readonly2"
     assert upd_resp.json()["document"] == '{"effect": "deny"}'
 
     # --- Тест назначения политики пользователю ---
-    user_resp = client.post("/auth/users/", json={
-        "username": "poluser",
-        "email": "poluser@example.com",
-        "is_active": True
-    }, headers=headers)
+    user_resp = client.post(
+        "/auth/users/",
+        json={"username": "poluser", "email": "poluser@example.com", "is_active": True},
+        headers=headers,
+    )
     assert user_resp.status_code == 201
     user_id = user_resp.json()["id"]
 

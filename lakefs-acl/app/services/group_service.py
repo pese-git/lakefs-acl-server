@@ -34,6 +34,7 @@ class GroupService:
     # --- Новый функционал для членства ---
     def add_user_to_group(self, group_id: int, user_id: int):
         from app.repositories.user_repository import UserRepository
+
         user_repo = UserRepository(self.db)
         group = self.repo.get_by_id(group_id)
         if not group:
@@ -45,6 +46,7 @@ class GroupService:
 
     def remove_user_from_group(self, group_id: int, user_id: int):
         from app.repositories.user_repository import UserRepository
+
         user_repo = UserRepository(self.db)
         group = self.repo.get_by_id(group_id)
         if not group:
